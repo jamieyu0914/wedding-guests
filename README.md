@@ -1,2 +1,2 @@
-# guest-inquiry-pages
-Search and manage guest records.
+# wedding-guests
+Search and manage guest records. 🔍🕵🏻✨📢📍🪑🍽️
