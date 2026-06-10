@@ -1,0 +1,376 @@
+<script setup>
+import { ref, computed } from 'vue'
+import { guestsData } from '../data/guests.js'
+
+// State
+const searchQuery = ref('')
+const guests = ref(guestsData)
+
+// Computed properties
+const filteredGuests = computed(() => {
+  const trimmedQuery = searchQuery.value.trim()
+  if (!trimmedQuery) return guests.value
+
+  const query = trimmedQuery.toLowerCase()
+  return guests.value.filter(guest => {
+    const searchFields = [
+      guest.name.toLowerCase(),
+      guest.email.toLowerCase(),
+      guest.phone,
+      guest.mealPreference.toLowerCase(),
+      guest.rsvpStatus.toLowerCase()
+    ]
+    return searchFields.some(field => field.includes(query))
+  })
+})
+
+// Methods
+const getStatusClass = (status) => {
+    switch (status) {
+      case '已出席':
+        return 'status-confirmed'
+      case '等待確認':
+        return 'status-pending'
+      case '確認缺席':
+        return 'status-declined'
+      default:
+        return ''
+    }
+}
+
+const getMealPreferenceClass = (preference) => {
+  switch (preference) {
+    case '葷食':
+      return 'meal-meat-based'
+    case '素食':
+      return 'meal-vegetarian'
+    default:
+      return ''
+  }
+}
+
+const clearSearch = () => {
+  searchQuery.value = ''
+}
+</script>
+
+<template>
+  <div class="search-container">
+    <h1>賓客列表</h1>
+
+    <div class="search-bar">
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="按姓名、信箱、手機或狀態搜尋..."
+        class="search-input"
+      />
+      <button
+        @click="clearSearch"
+        v-show="searchQuery"
+        class="clear-btn"
+        aria-label="清除搜尋"
+      >
+        ✕
+      </button>
+      <button
+        class="search-btn"
+        aria-label="搜尋"
+      >
+        🔍
+      </button>
+    </div>
+
+    <div class="results-info">
+      <p>共 {{ filteredGuests.length }} 位賓客</p>
+    </div>
+
+    <div v-if="filteredGuests.length > 0" class="guests-grid">
+      <div v-for="guest in filteredGuests" :key="guest.id" class="guest-card">
+        <div class="guest-header">
+          <h3>{{ guest.name }}</h3>
+          <span :class="['status-badge', getStatusClass(guest.rsvpStatus)]">
+            {{ guest.rsvpStatus }}
+          </span>
+        </div>
+
+        <div class="guest-info">
+          <div class="info-item">
+            <span class="label">信箱:</span>
+            <a :href="`mailto:${guest.email}`">{{ guest.email }}</a>
+          </div>
+
+          <div class="info-item">
+            <span class="label">手機:</span>
+            <a :href="`tel:${guest.phone}`">{{ guest.phone }}</a>
+          </div>
+
+          <div class="info-item">
+            <span class="label">餐點偏好:</span>
+            <span :class="['meal-preference', getMealPreferenceClass(guest.mealPreference)]">{{ guest.mealPreference }}</span>
+          </div>
+
+          <div v-if="guest.table" class="info-item">
+            <span class="label">桌次:</span>
+            <span class="table-number">{{ guest.table }}</span>
+          </div>
+
+          <div v-if="guest.notes" class="info-item">
+            <span class="label">備註:</span>
+            <span>{{ guest.notes }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="no-results">
+      <p>沒有找到符合搜尋條件的賓客。</p>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1 {
+  color: var(--text-h);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.search-input::placeholder {
+  color: var(--text);
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.clear-btn:hover {
+  color: var(--accent);
+}
+
+.clear-btn:focus {
+  outline: none;
+}
+
+.search-btn {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 1.2rem;
+  padding: 0.5rem 0.8rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.search-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.search-btn:focus {
+  outline: none;
+}
+
+.results-info {
+  text-align: right;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.guests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.guest-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.guest-card:hover {
+  transform: translateY(-4px);
+  box-shadow: rgba(170, 59, 255, 0.2) 0 10px 20px -5px;
+}
+
+.guest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.guest-header h3 {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 1.1rem;
+  flex: 1;
+  word-break: break-word;
+}
+
+.status-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-confirmed {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.status-pending {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+
+.status-declined {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.meal-preference {
+  font-weight: 600;
+}
+
+.meal-preference.meal-meat-based {
+  color: #8B6F47;
+}
+
+.meal-preference.meal-vegetarian {
+  color: #22c55e;
+}
+
+.table-number {
+  color: #a855f7;
+  font-weight: 700;
+}
+
+.guest-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--text-h);
+  flex-shrink: 0;
+  min-width: 70px;
+}
+
+.info-item span,
+.info-item a {
+  color: var(--text);
+  word-break: break-word;
+}
+
+.info-item .table-number {
+  color: #a855f7 !important;
+  font-weight: 700 !important;
+}
+
+.info-item a {
+  text-decoration: none;
+  color: var(--text);
+  transition: opacity 0.2s ease;
+}
+
+.info-item a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text);
+  font-size: 1.1rem;
+  background: var(--code-bg);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .search-container {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .guests-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guest-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-badge {
+    align-self: flex-start;
+  }
+}
+</style>

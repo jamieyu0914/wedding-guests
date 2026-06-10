@@ -47,10 +47,10 @@ npm run build
 
 ## Features
 
-- Search guest records
-- Manage guest information
-- Organize seating arrangements
-- Track meal preferences
+- 賓客列表 (Guest Records)
+- 管理賓客資訊 (Manage Guest Information)
+- 安排座位 (Organize Seating Arrangements)
+- 追蹤餐點偏好 (Track Meal Preferences)
 
 ## Project Structure
 
