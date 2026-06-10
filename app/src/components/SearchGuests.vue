@@ -1,57 +1,57 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { guestsData } from '../data/guests.js'
+import { ref, computed } from "vue";
+import { guestsData } from "../data/guests.js";
 
 // State
-const searchQuery = ref('')
-const guests = ref(guestsData)
+const searchQuery = ref("");
+const guests = ref(guestsData);
 
 // Computed properties
 const filteredGuests = computed(() => {
-  const trimmedQuery = searchQuery.value.trim()
-  if (!trimmedQuery) return guests.value
+  const trimmedQuery = searchQuery.value.trim();
+  if (!trimmedQuery) return guests.value;
 
-  const query = trimmedQuery.toLowerCase()
-  return guests.value.filter(guest => {
+  const query = trimmedQuery.toLowerCase();
+  return guests.value.filter((guest) => {
     const searchFields = [
       guest.name.toLowerCase(),
       guest.email.toLowerCase(),
       guest.phone,
       guest.mealPreference.toLowerCase(),
-      guest.rsvpStatus.toLowerCase()
-    ]
-    return searchFields.some(field => field.includes(query))
-  })
-})
+      guest.rsvpStatus.toLowerCase(),
+    ];
+    return searchFields.some((field) => field.includes(query));
+  });
+});
 
 // Methods
 const getStatusClass = (status) => {
-    switch (status) {
-      case '已出席':
-        return 'status-confirmed'
-      case '等待確認':
-        return 'status-pending'
-      case '確認缺席':
-        return 'status-declined'
-      default:
-        return ''
-    }
-}
+  switch (status) {
+    case "已出席":
+      return "status-confirmed";
+    case "等待確認":
+      return "status-pending";
+    case "確認缺席":
+      return "status-declined";
+    default:
+      return "";
+  }
+};
 
 const getMealPreferenceClass = (preference) => {
   switch (preference) {
-    case '葷食':
-      return 'meal-meat-based'
-    case '素食':
-      return 'meal-vegetarian'
+    case "葷食":
+      return "meal-meat-based";
+    case "素食":
+      return "meal-vegetarian";
     default:
-      return ''
+      return "";
   }
-}
+};
 
 const clearSearch = () => {
-  searchQuery.value = ''
-}
+  searchQuery.value = "";
+};
 </script>
 
 <template>
@@ -73,12 +73,7 @@ const clearSearch = () => {
       >
         ✕
       </button>
-      <button
-        class="search-btn"
-        aria-label="搜尋"
-      >
-        🔍
-      </button>
+      <button class="search-btn" aria-label="搜尋">🔍</button>
     </div>
 
     <div class="results-info">
@@ -107,7 +102,13 @@ const clearSearch = () => {
 
           <div class="info-item">
             <span class="label">餐點偏好:</span>
-            <span :class="['meal-preference', getMealPreferenceClass(guest.mealPreference)]">{{ guest.mealPreference }}</span>
+            <span
+              :class="[
+                'meal-preference',
+                getMealPreferenceClass(guest.mealPreference),
+              ]"
+              >{{ guest.mealPreference }}</span
+            >
           </div>
 
           <div v-if="guest.table" class="info-item">
@@ -231,7 +232,9 @@ h1 {
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .guest-card:hover {
@@ -267,18 +270,18 @@ h1 {
 }
 
 .status-confirmed {
-  background: rgba(212, 165, 116, 0.4);
-  color: #D4A574;
-}
-
-.status-pending {
   background: rgba(168, 85, 247, 0.2);
   color: #9f54e5;
 }
 
+.status-pending {
+  background: rgba(212, 165, 116, 0.4);
+  color: #d4a574;
+}
+
 .status-declined {
   background: rgba(255, 107, 107, 0.2);
-  color: #FF6B6B;
+  color: #ff6b6b;
 }
 
 .meal-preference {
@@ -286,7 +289,7 @@ h1 {
 }
 
 .meal-preference.meal-meat-based {
-  color: #D4A574;
+  color: #d4a574;
 }
 
 .meal-preference.meal-vegetarian {

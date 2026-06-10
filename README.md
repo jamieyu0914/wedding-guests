@@ -47,8 +47,9 @@ npm run build
 - 主頁登入功能 (Login Functionality)
 - 賓客列表 (Guest Records)
 - 管理賓客資訊 (Manage Guest Information)
-- 安排座位 (Organize Seating Arrangements)
+- 顯示座位資訊 (View Seating Arrangements)
 - 追蹤餐點偏好 (Track Meal Preferences)
+- 即時人數統計 (Real-time Guest Count Summary)
 
 ## Project Structure
 

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import HomePage from "./HomePage.vue";
 import SearchGuests from "./SearchGuests.vue";
+import GuestStats from "./GuestStats.vue";
 import SideMenu from "./SideMenu.vue";
 import { getAuthState } from "../stores/auth.js";
 
@@ -21,6 +22,11 @@ const sideMenuRef = ref(null);
       <!-- 賓客列表 - 未登入時不顯示 -->
       <template v-else-if="sideMenuRef.activeMenu === 'guests' && isLoggedIn">
         <SearchGuests />
+      </template>
+
+      <!-- 即時統計 - 未登入時不顯示 -->
+      <template v-else-if="sideMenuRef.activeMenu === 'stats' && isLoggedIn">
+        <GuestStats />
       </template>
 
       <!-- 其他頁面未登入時顯示提示 -->
