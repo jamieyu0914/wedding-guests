@@ -111,7 +111,7 @@ const clearSearch = () => {
           </div>
 
           <div v-if="guest.table" class="info-item">
-            <span class="label">桌次:</span>
+            <span class="label table-label">桌次:</span>
             <span class="table-number">{{ guest.table }}</span>
           </div>
 
@@ -251,7 +251,7 @@ h1 {
 
 .guest-header h3 {
   margin: 0;
-  color: var(--text-h);
+  color: #9f54e5;
   font-size: 1.1rem;
   flex: 1;
   word-break: break-word;
@@ -267,18 +267,18 @@ h1 {
 }
 
 .status-confirmed {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
+  background: rgba(212, 165, 116, 0.4);
+  color: #D4A574;
 }
 
 .status-pending {
   background: rgba(168, 85, 247, 0.2);
-  color: #a855f7;
+  color: #9f54e5;
 }
 
 .status-declined {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background: rgba(255, 107, 107, 0.2);
+  color: #FF6B6B;
 }
 
 .meal-preference {
@@ -286,7 +286,7 @@ h1 {
 }
 
 .meal-preference.meal-meat-based {
-  color: #8B6F47;
+  color: #D4A574;
 }
 
 .meal-preference.meal-vegetarian {
@@ -294,7 +294,7 @@ h1 {
 }
 
 .table-number {
-  color: #a855f7;
+  color: #9f54e5;
   font-weight: 700;
 }
 
@@ -317,6 +317,14 @@ h1 {
   min-width: 70px;
 }
 
+.table-label {
+  color: #9f54e5 !important;
+}
+
+.info-item .label {
+  color: var(--text-h);
+}
+
 .info-item span,
 .info-item a {
   color: var(--text);
@@ -324,7 +332,7 @@ h1 {
 }
 
 .info-item .table-number {
-  color: #a855f7 !important;
+  color: #9f54e5 !important;
   font-weight: 700 !important;
 }
 
