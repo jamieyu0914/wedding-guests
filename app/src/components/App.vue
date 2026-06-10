@@ -4,6 +4,7 @@ import HomePage from "./HomePage.vue";
 import SearchGuests from "./SearchGuests.vue";
 import GuestStats from "./GuestStats.vue";
 import SideMenu from "./SideMenu.vue";
+import Settings from "./Settings.vue";
 import { getAuthState } from "../stores/auth.js";
 
 const { isLoggedIn } = getAuthState();
@@ -27,6 +28,11 @@ const sideMenuRef = ref(null);
       <!-- 即時統計 - 未登入時不顯示 -->
       <template v-else-if="sideMenuRef.activeMenu === 'stats' && isLoggedIn">
         <GuestStats />
+      </template>
+
+      <!-- 設定 - 未登入時不顯示 -->
+      <template v-else-if="sideMenuRef.activeMenu === 'settings' && isLoggedIn">
+        <Settings />
       </template>
 
       <!-- 其他頁面未登入時顯示提示 -->

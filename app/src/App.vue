@@ -4,6 +4,7 @@ import SideMenu from "./components/SideMenu.vue";
 import HomePage from "./components/HomePage.vue";
 import SearchGuests from "./components/SearchGuests.vue";
 import GuestStats from "./components/GuestStats.vue";
+import Settings from "./components/Settings.vue";
 
 const sideMenuRef = ref(null);
 
@@ -19,6 +20,7 @@ const currentPage = computed(() => {
       <HomePage v-if="currentPage === 'home'" />
       <SearchGuests v-if="currentPage === 'guests'" />
       <GuestStats v-if="currentPage === 'stats'" />
+      <Settings v-if="currentPage === 'settings'" />
     </main>
   </div>
 </template>
