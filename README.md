@@ -1,2 +1,68 @@
-# wedding-guests
-Search and manage guest records. 🔍🕵🏻✨📢📍🪑🍽️
+# Wedding Guests
+
+A web application to search and manage guest records. 🔍🕵🏻✨📢📍🪑🍽️
+
+## Overview
+
+This is a Vue.js-based guest management system built with Vite, designed to help you organize and track guest information for your wedding event.
+
+## Prerequisites
+
+- Node.js 22.12 or later
+- npm 10 or later
+
+## Installation & Setup
+
+```bash
+# Use the correct Node.js version
+nvm use 22.12
+
+# Create the Vite project with Vue template
+npm create vite@latest app --template vue
+
+# Navigate to the app directory
+cd app
+
+# Install dependencies
+npm install
+```
+
+## Running the Application
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5520` by default.
+
+## Build for Production
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+## Features
+
+- Search guest records
+- Manage guest information
+- Organize seating arrangements
+- Track meal preferences
+
+## Project Structure
+
+```
+app/
+├── src/
+│   ├── components/    # Vue components
+│   ├── App.vue        # Root component
+│   ├── main.js        # Application entry point
+│   └── style.css      # Global styles
+├── public/            # Static assets
+├── index.html         # HTML template
+├── package.json       # Project dependencies
+└── vite.config.js     # Vite configuration
+```
