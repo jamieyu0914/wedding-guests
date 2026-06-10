@@ -17,9 +17,6 @@ This is a Vue.js-based guest management system built with Vite, designed to help
 # Use the correct Node.js version
 nvm use 22.12
 
-# Create the Vite project with Vue template
-npm create vite@latest app --template vue
-
 # Navigate to the app directory
 cd app
 
@@ -47,6 +44,7 @@ npm run build
 
 ## Features
 
+- 主頁登入功能 (Login Functionality)
 - 賓客列表 (Guest Records)
 - 管理賓客資訊 (Manage Guest Information)
 - 安排座位 (Organize Seating Arrangements)
