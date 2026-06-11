@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { login, logout, getAuthState } from "../stores/auth.js";
 
 const { isLoggedIn, currentUser } = getAuthState();
+console.log("HomePage - isLoggedIn:", isLoggedIn.value);
 const password = ref("");
 const errorMessage = ref("");
 const showPassword = ref(false);
@@ -37,7 +38,7 @@ const handleKeyPress = (event) => {
   <div class="home-page">
     <div class="home-container">
       <!-- 未登入狀態 - 登入表單 -->
-      <div v-if="!isLoggedIn.value" class="login-form-wrapper">
+      <div v-if="!isLoggedIn" class="login-form-wrapper">
         <h1 class="welcome-title">Welcome our Wedding</h1>
         <p class="welcome-subtitle">2026 Wedding</p>
         <div class="welcome-decoration">✨ 💍 ✨</div>
@@ -73,15 +74,11 @@ const handleKeyPress = (event) => {
       </div>
 
       <!-- 已登入狀態 - 歡迎頁面 -->
-      <div v-else class="welcome-wrapper">
+      <div v-if="isLoggedIn" class="welcome-wrapper">
         <h1 class="welcome-title">Welcome our Wedding</h1>
         <p class="welcome-subtitle">2026 Wedding</p>
         <div class="welcome-decoration">✨ 💍 ✨</div>
-
-        <div class="user-info">
-          <p class="user-greeting">歡迎您，{{ currentUser }}</p>
-          <button class="logout-button" @click="handleLogout">登出</button>
-        </div>
+          <p class="user-greeting">Let's enjoy the wedding together ! ↩️</p>
       </div>
     </div>
   </div>
