@@ -1,10 +1,17 @@
 <script setup>
-import { ref, computed } from "vue";
-import { guestsData } from "../data/guests.js";
+import { ref, computed, onMounted } from "vue";
+import { useGuests } from '@/composables/useGuests'
+
+const { guests, loading, error, fetchGuests, updateGuest, deleteGuest } = useGuests()
+
+onMounted(() => fetchGuests())
 
 // State
 const searchQuery = ref("");
-const guests = ref(guestsData);
+
+async function confirmRsvp(id) {
+  await updateGuest(id, { rsvp_status: '已出席' })
+}
 
 // Computed properties
 const filteredGuests = computed(() => {
@@ -14,11 +21,11 @@ const filteredGuests = computed(() => {
   const query = trimmedQuery.toLowerCase();
   return guests.value.filter((guest) => {
     const searchFields = [
-      guest.name.toLowerCase(),
-      guest.email.toLowerCase(),
-      guest.phone,
-      guest.mealPreference.toLowerCase(),
-      guest.rsvpStatus.toLowerCase(),
+      guest.name?.toLowerCase() ?? '',
+      guest.email?.toLowerCase() ?? '',
+      guest.phone ?? '',
+      guest.meal_preference?.toLowerCase() ?? '',
+      guest.rsvp_status?.toLowerCase() ?? '',
     ];
     return searchFields.some((field) => field.includes(query));
   });
@@ -27,25 +34,18 @@ const filteredGuests = computed(() => {
 // Methods
 const getStatusClass = (status) => {
   switch (status) {
-    case "已出席":
-      return "status-confirmed";
-    case "等待確認":
-      return "status-pending";
-    case "確認缺席":
-      return "status-declined";
-    default:
-      return "";
+    case "已出席": return "status-confirmed";
+    case "等待確認": return "status-pending";
+    case "確認缺席": return "status-declined";
+    default: return "";
   }
 };
 
 const getMealPreferenceClass = (preference) => {
   switch (preference) {
-    case "葷食":
-      return "meal-meat-based";
-    case "素食":
-      return "meal-vegetarian";
-    default:
-      return "";
+    case "葷食": return "meal-meat-based";
+    case "素食": return "meal-vegetarian";
+    default: return "";
   }
 };
 
@@ -57,6 +57,9 @@ const clearSearch = () => {
 <template>
   <div class="search-container">
     <h1>賓客列表</h1>
+
+    <p v-if="loading">載入中...</p>
+    <p v-if="error" class="error-msg">{{ error }}</p>
 
     <div class="search-bar">
       <input
@@ -84,8 +87,8 @@ const clearSearch = () => {
       <div v-for="guest in filteredGuests" :key="guest.id" class="guest-card">
         <div class="guest-header">
           <h3>{{ guest.name }}</h3>
-          <span :class="['status-badge', getStatusClass(guest.rsvpStatus)]">
-            {{ guest.rsvpStatus }}
+          <span :class="['status-badge', getStatusClass(guest.rsvp_status)]">
+            {{ guest.rsvp_status }}
           </span>
         </div>
 
@@ -102,29 +105,30 @@ const clearSearch = () => {
 
           <div class="info-item">
             <span class="label">餐點偏好:</span>
-            <span
-              :class="[
-                'meal-preference',
-                getMealPreferenceClass(guest.mealPreference),
-              ]"
-              >{{ guest.mealPreference }}</span
-            >
+            <span :class="['meal-preference', getMealPreferenceClass(guest.meal_preference)]">
+              {{ guest.meal_preference }}
+            </span>
           </div>
 
-          <div v-if="guest.table" class="info-item">
+          <div v-if="guest.table_number" class="info-item">
             <span class="label table-label">桌次:</span>
-            <span class="table-number">{{ guest.table }}</span>
+            <span class="table-number">{{ guest.table_number }}</span>
           </div>
 
           <div v-if="guest.notes" class="info-item">
             <span class="label">備註:</span>
             <span>{{ guest.notes }}</span>
           </div>
+
+          <div class="info-item actions">
+            <button @click="confirmRsvp(guest.id)" class="btn-confirm">確認出席</button>
+            <button @click="deleteGuest(guest.id)" class="btn-delete">刪除</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div v-else class="no-results">
+    <div v-else-if="!loading" class="no-results">
       <p>沒有找到符合搜尋條件的賓客。</p>
     </div>
   </div>
@@ -142,6 +146,12 @@ h1 {
   margin-bottom: 2rem;
   text-align: center;
   font-size: 2rem;
+}
+
+.error-msg {
+  color: #ff6b6b;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .search-bar {
@@ -183,13 +193,8 @@ h1 {
   flex-shrink: 0;
 }
 
-.clear-btn:hover {
-  color: var(--accent);
-}
-
-.clear-btn:focus {
-  outline: none;
-}
+.clear-btn:hover { color: var(--accent); }
+.clear-btn:focus { outline: none; }
 
 .search-btn {
   background: var(--bg);
@@ -208,9 +213,7 @@ h1 {
   color: var(--accent);
 }
 
-.search-btn:focus {
-  outline: none;
-}
+.search-btn:focus { outline: none; }
 
 .results-info {
   text-align: right;
@@ -232,9 +235,7 @@ h1 {
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .guest-card:hover {
@@ -265,41 +266,18 @@ h1 {
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.status-confirmed {
-  background: rgba(168, 85, 247, 0.2);
-  color: #9f54e5;
-}
+.status-confirmed { background: rgba(168, 85, 247, 0.2); color: #9f54e5; }
+.status-pending   { background: rgba(212, 165, 116, 0.4); color: #d4a574; }
+.status-declined  { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
 
-.status-pending {
-  background: rgba(212, 165, 116, 0.4);
-  color: #d4a574;
-}
+.meal-preference { font-weight: 600; }
+.meal-preference.meal-meat-based { color: #d4a574; }
+.meal-preference.meal-vegetarian { color: #22c55e; }
 
-.status-declined {
-  background: rgba(255, 107, 107, 0.2);
-  color: #ff6b6b;
-}
-
-.meal-preference {
-  font-weight: 600;
-}
-
-.meal-preference.meal-meat-based {
-  color: #d4a574;
-}
-
-.meal-preference.meal-vegetarian {
-  color: #22c55e;
-}
-
-.table-number {
-  color: #9f54e5;
-  font-weight: 700;
-}
+.table-number { color: #9f54e5; font-weight: 700; }
 
 .guest-info {
   display: flex;
@@ -320,24 +298,12 @@ h1 {
   min-width: 70px;
 }
 
-.table-label {
-  color: #9f54e5 !important;
-}
-
-.info-item .label {
-  color: var(--text-h);
-}
+.table-label { color: #9f54e5 !important; }
 
 .info-item span,
-.info-item a {
-  color: var(--text);
-  word-break: break-word;
-}
+.info-item a { color: var(--text); word-break: break-word; }
 
-.info-item .table-number {
-  color: #9f54e5 !important;
-  font-weight: 700 !important;
-}
+.info-item .table-number { color: #9f54e5 !important; font-weight: 700 !important; }
 
 .info-item a {
   text-decoration: none;
@@ -345,10 +311,33 @@ h1 {
   transition: opacity 0.2s ease;
 }
 
-.info-item a:hover {
-  opacity: 0.8;
-  text-decoration: underline;
+.info-item a:hover { opacity: 0.8; text-decoration: underline; }
+
+.actions { margin-top: 0.5rem; gap: 0.5rem; }
+
+.btn-confirm {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  background: rgba(168, 85, 247, 0.2);
+  color: #9f54e5;
+  transition: background 0.2s;
 }
+.btn-confirm:hover { background: rgba(168, 85, 247, 0.35); }
+
+.btn-delete {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  transition: background 0.2s;
+}
+.btn-delete:hover { background: rgba(255, 107, 107, 0.3); }
 
 .no-results {
   text-align: center;
@@ -360,28 +349,11 @@ h1 {
   border-radius: 8px;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
-  .search-container {
-    padding: 1rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .guests-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .guest-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .status-badge {
-    align-self: flex-start;
-  }
+  .search-container { padding: 1rem; }
+  h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  .guests-grid { grid-template-columns: 1fr; }
+  .guest-header { flex-direction: column; align-items: flex-start; }
+  .status-badge { align-self: flex-start; }
 }
 </style>
