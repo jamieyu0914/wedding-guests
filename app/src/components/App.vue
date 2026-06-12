@@ -2,13 +2,27 @@
 import { ref } from "vue";
 import HomePage from "./HomePage.vue";
 import SearchGuests from "./SearchGuests.vue";
+import EditGuest from "./EditGuest.vue";
 import GuestStats from "./GuestStats.vue";
 import SideMenu from "./SideMenu.vue";
 import Settings from "./Settings.vue";
 import { getAuthState } from "../stores/auth.js";
 
+console.log("2 /src/components/App.vue mounted");
+console.log(SearchGuests.__file);
+
 const { isLoggedIn } = getAuthState();
 const sideMenuRef = ref(null);
+const editingGuestId = ref(null);
+
+function handleEditGuest(id) {
+  console.log("handleEditGuest called with id:", id); // ← 加這行
+  editingGuestId.value = id;
+}
+
+function handleBackFromEdit() {
+  editingGuestId.value = null;
+}
 </script>
 
 <template>
@@ -16,13 +30,20 @@ const sideMenuRef = ref(null);
     <SideMenu ref="sideMenuRef" />
     <main class="main-content">
       <!-- 首頁 -->
-      <template v-if="!sideMenuRef?.activeMenu || sideMenuRef.activeMenu === 'home'">
+      <template
+        v-if="!sideMenuRef?.activeMenu || sideMenuRef.activeMenu === 'home'"
+      >
         <HomePage />
       </template>
 
       <!-- 賓客列表 - 未登入時不顯示 -->
       <template v-else-if="sideMenuRef.activeMenu === 'guests' && isLoggedIn">
-        <SearchGuests />
+        <SearchGuests @edit-guest="handleEditGuest" />
+        <EditGuest
+          v-if="editingGuestId"
+          :guest-id="editingGuestId"
+          @back="handleBackFromEdit"
+        />
       </template>
 
       <!-- 即時統計 - 未登入時不顯示 -->

@@ -1,16 +1,30 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useGuests } from '../composables/useGuests'
+import { useGuests } from "../composables/useGuests";
 
-const { guests, loading, error, fetchGuests, updateGuest, deleteGuest } = useGuests()
+const { guests, loading, error, fetchGuests, updateGuest, deleteGuest } =
+  useGuests();
 
-onMounted(() => fetchGuests())
+onMounted(() => fetchGuests());
 
+const emit = defineEmits(["edit-guest"]);
+
+function editGuest(id) {
+  emit("edit-guest", id);
+}
 // State
 const searchQuery = ref("");
 
 async function confirmRsvp(id) {
-  await updateGuest(id, { rsvp_status: '已出席' })
+  await updateGuest(id, { rsvp_status: "已出席" });
+}
+
+async function waitForConfirmation(id) {
+  await updateGuest(id, { rsvp_status: "等待確認" });
+}
+
+async function declineRsvp(id) {
+  await updateGuest(id, { rsvp_status: "確認缺席" });
 }
 
 // Computed properties
@@ -21,11 +35,11 @@ const filteredGuests = computed(() => {
   const query = trimmedQuery.toLowerCase();
   return guests.value.filter((guest) => {
     const searchFields = [
-      guest.name?.toLowerCase() ?? '',
-      guest.email?.toLowerCase() ?? '',
-      guest.phone_last_3_code ?? '',
-      guest.meal_preference?.toLowerCase() ?? '',
-      guest.rsvp_status?.toLowerCase() ?? '',
+      guest.name?.toLowerCase() ?? "",
+      guest.email?.toLowerCase() ?? "",
+      guest.phone_last_3_code ?? "",
+      guest.meal_preference?.toLowerCase() ?? "",
+      guest.rsvp_status?.toLowerCase() ?? "",
     ];
     return searchFields.some((field) => field.includes(query));
   });
@@ -34,18 +48,25 @@ const filteredGuests = computed(() => {
 // Methods
 const getStatusClass = (status) => {
   switch (status) {
-    case "已出席": return "status-confirmed";
-    case "等待確認": return "status-pending";
-    case "確認缺席": return "status-declined";
-    default: return "";
+    case "已出席":
+      return "status-confirmed";
+    case "等待確認":
+      return "status-pending";
+    case "確認缺席":
+      return "status-declined";
+    default:
+      return "";
   }
 };
 
 const getMealPreferenceClass = (preference) => {
   switch (preference) {
-    case "葷食": return "meal-meat-based";
-    case "素食": return "meal-vegetarian";
-    default: return "";
+    case "葷食":
+      return "meal-meat-based";
+    case "素食":
+      return "meal-vegetarian";
+    default:
+      return "";
   }
 };
 
@@ -87,6 +108,15 @@ const clearSearch = () => {
       <div v-for="guest in filteredGuests" :key="guest.id" class="guest-card">
         <div class="guest-header">
           <h3>{{ guest.name }}</h3>
+
+          <button️
+            class="toggle-password-btn"
+            @click="editGuest(guest.id)"
+            aria-label="編輯賓客"
+          >
+            <i class="fas fa-edit"></i>
+          </button️>
+
           <span :class="['status-badge', getStatusClass(guest.rsvp_status)]">
             {{ guest.rsvp_status }}
           </span>
@@ -98,14 +128,21 @@ const clearSearch = () => {
             <a :href="`mailto:${guest.email}`">{{ guest.email }}</a>
           </div>
 
-          <div class="info-item">
+          <div v-if="guest.phone_last_3_code" class="info-item">
             <span class="label">手機:</span>
-            <a :href="`tel:${guest.phone_last_3_code}`">09*******{{ guest.phone_last_3_code }}</a>
+            <a :href="`tel:${guest.phone_last_3_code}`"
+              >09*******{{ guest.phone_last_3_code }}</a
+            >
           </div>
 
           <div class="info-item">
             <span class="label">餐點偏好:</span>
-            <span :class="['meal-preference', getMealPreferenceClass(guest.meal_preference)]">
+            <span
+              :class="[
+                'meal-preference',
+                getMealPreferenceClass(guest.meal_preference),
+              ]"
+            >
               {{ guest.meal_preference }}
             </span>
           </div>
@@ -115,14 +152,26 @@ const clearSearch = () => {
             <span class="table-number">{{ guest.table_number }}</span>
           </div>
 
+          <div v-if="guest.table_name" class="info-item">
+            <span class="label table-label">桌名:</span>
+            <span class="table-name">{{ guest.table_name }}</span>
+          </div>
+
           <div v-if="guest.notes" class="info-item">
             <span class="label">備註:</span>
             <span>{{ guest.notes }}</span>
           </div>
 
           <div class="info-item actions">
-            <button @click="confirmRsvp(guest.id)" class="btn-confirm">確認出席</button>
-            <button @click="deleteGuest(guest.id)" class="btn-delete">刪除</button>
+            <button @click="confirmRsvp(guest.id)" class="btn-confirm">
+              確認出席
+            </button>
+            <button @click="waitForConfirmation(guest.id)" class="btn-waitfor">
+              等待確認
+            </button>
+            <button @click="declineRsvp(guest.id)" class="btn-decline">
+              確認缺席
+            </button>
           </div>
         </div>
       </div>
@@ -193,8 +242,12 @@ h1 {
   flex-shrink: 0;
 }
 
-.clear-btn:hover { color: var(--accent); }
-.clear-btn:focus { outline: none; }
+.clear-btn:hover {
+  color: var(--accent);
+}
+.clear-btn:focus {
+  outline: none;
+}
 
 .search-btn {
   background: var(--bg);
@@ -213,7 +266,9 @@ h1 {
   color: var(--accent);
 }
 
-.search-btn:focus { outline: none; }
+.search-btn:focus {
+  outline: none;
+}
 
 .results-info {
   text-align: right;
@@ -235,7 +290,9 @@ h1 {
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .guest-card:hover {
@@ -269,15 +326,38 @@ h1 {
   white-space: nowrap;
 }
 
-.status-confirmed { background: rgba(168, 85, 247, 0.2); color: #9f54e5; }
-.status-pending   { background: rgba(212, 165, 116, 0.4); color: #d4a574; }
-.status-declined  { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+.status-confirmed {
+  background: rgba(168, 85, 247, 0.2);
+  color: #9f54e5;
+}
+.status-pending {
+  background: rgba(212, 165, 116, 0.4);
+  color: #d4a574;
+}
+.status-declined {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+}
 
-.meal-preference { font-weight: 600; }
-.meal-preference.meal-meat-based { color: #d4a574; }
-.meal-preference.meal-vegetarian { color: #22c55e; }
+.meal-preference {
+  font-weight: 600;
+}
+.meal-preference.meal-meat-based {
+  color: #d4a574;
+}
+.meal-preference.meal-vegetarian {
+  color: #22c55e;
+}
 
-.table-number { color: #9f54e5; font-weight: 700; }
+.table-number {
+  color: #9f54e5;
+  font-weight: 700;
+}
+
+.table-name {
+  color: #9f54e5;
+  font-weight: 700;
+}
 
 .guest-info {
   display: flex;
@@ -298,12 +378,25 @@ h1 {
   min-width: 70px;
 }
 
-.table-label { color: #9f54e5 !important; }
+.table-label {
+  color: #9f54e5 !important;
+}
 
 .info-item span,
-.info-item a { color: var(--text); word-break: break-word; }
+.info-item a {
+  color: var(--text);
+  word-break: break-word;
+}
 
-.info-item .table-number { color: #9f54e5 !important; font-weight: 700 !important; }
+.info-item .table-number {
+  color: #9f54e5 !important;
+  font-weight: 700 !important;
+}
+
+.info-item .table-name {
+  color: #9f54e5 !important;
+  font-weight: 700 !important;
+}
 
 .info-item a {
   text-decoration: none;
@@ -311,9 +404,15 @@ h1 {
   transition: opacity 0.2s ease;
 }
 
-.info-item a:hover { opacity: 0.8; text-decoration: underline; }
+.info-item a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
 
-.actions { margin-top: 0.5rem; gap: 0.5rem; }
+.actions {
+  margin-top: 0.5rem;
+  gap: 0.5rem;
+}
 
 .btn-confirm {
   padding: 0.4rem 0.9rem;
@@ -325,9 +424,25 @@ h1 {
   color: #9f54e5;
   transition: background 0.2s;
 }
-.btn-confirm:hover { background: rgba(168, 85, 247, 0.35); }
+.btn-confirm:hover {
+  background: rgba(168, 85, 247, 0.35);
+}
 
-.btn-delete {
+.btn-waitfor {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  background: rgba(212, 165, 116, 0.4);
+  color: #d4a574;
+  transition: background 0.2s;
+}
+.btn-waitfor:hover {
+  background: rgba(212, 165, 116, 0.6);
+}
+
+.btn-decline {
   padding: 0.4rem 0.9rem;
   border-radius: 6px;
   border: none;
@@ -337,7 +452,9 @@ h1 {
   color: #ff6b6b;
   transition: background 0.2s;
 }
-.btn-delete:hover { background: rgba(255, 107, 107, 0.3); }
+.btn-decline:hover {
+  background: rgba(255, 107, 107, 0.3);
+}
 
 .no-results {
   text-align: center;
@@ -350,10 +467,22 @@ h1 {
 }
 
 @media (max-width: 768px) {
-  .search-container { padding: 1rem; }
-  h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
-  .guests-grid { grid-template-columns: 1fr; }
-  .guest-header { flex-direction: column; align-items: flex-start; }
-  .status-badge { align-self: flex-start; }
+  .search-container {
+    padding: 1rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .guests-grid {
+    grid-template-columns: 1fr;
+  }
+  .guest-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .status-badge {
+    align-self: flex-start;
+  }
 }
 </style>

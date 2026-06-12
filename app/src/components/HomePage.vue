@@ -4,22 +4,34 @@ import { login, logout, getAuthState } from "../stores/auth.js";
 
 const { isLoggedIn, currentUser } = getAuthState();
 console.log("HomePage - isLoggedIn:", isLoggedIn.value);
+const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 const showPassword = ref(false);
 
-const handleLogin = () => {
+const handleLogin = async () => {
   errorMessage.value = "";
+  if (!email.value.trim()) {
+    errorMessage.value = "請輸入帳號";
+    return;
+  }
   if (!password.value.trim()) {
     errorMessage.value = "請輸入密碼";
     return;
   }
 
-  if (login(password.value)) {
+  // if (login(password.value)) {
+  //   password.value = "";
+  // } else {
+  //   errorMessage.value = "密碼錯誤，請重試";
+  //   password.value = "";
+  // }
+  const result = await login(email.value, password.value);
+  if (result.success) {
+    email.value = "";
     password.value = "";
   } else {
-    errorMessage.value = "密碼錯誤，請重試";
-    password.value = "";
+    errorMessage.value = result.message;
   }
 };
 
@@ -44,7 +56,17 @@ const handleKeyPress = (event) => {
         <div class="welcome-decoration">✨ 💍 ✨</div>
 
         <div class="login-form">
-          <h2 class="login-title">請輸入密碼以繼續</h2>
+          <h2 class="login-title">請輸入帳號、密碼以繼續</h2>
+
+          <div class="input-group">
+            <input
+              v-model="email"
+              type="text"
+              class="account-input"
+              placeholder="輸入帳號"
+              @keypress="handleKeyPress"
+            />
+          </div>
 
           <div class="input-group">
             <input
@@ -78,7 +100,7 @@ const handleKeyPress = (event) => {
         <h1 class="welcome-title">Welcome our Wedding</h1>
         <p class="welcome-subtitle">2026 Wedding</p>
         <div class="welcome-decoration">✨ 💍 ✨</div>
-          <p class="user-greeting">Let's enjoy the wedding together ! ↩️</p>
+        <p class="user-greeting">Let's enjoy the wedding together ! ↩️</p>
       </div>
     </div>
   </div>
@@ -155,6 +177,17 @@ const handleKeyPress = (event) => {
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
+}
+
+.account-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text);
+  font-size: 16px;
+  transition: border-color 0.3s ease;
 }
 
 .password-input {
