@@ -1,21 +1,24 @@
 <script setup>
-import { ref, computed, watch } from "vue";
-import { guestsData } from "../data/guests.js";
+import { computed, onMounted } from "vue";
+import { useGuests } from '../composables/useGuests'
 
-const guests = ref([...guestsData]);
+const { guests, loading, error, fetchGuests } = useGuests()
+
+onMounted(() => fetchGuests())
+
 const TOTAL_TABLES = 27;
 
 // 計算統計數據
 const stats = computed(() => {
-  const attended = guests.value.filter((g) => g.rsvpStatus === "已出席").length;
+  const attended = guests.value.filter((g) => g.rsvp_status === "已出席").length;
   const notAttended = guests.value.filter(
-    (g) => g.rsvpStatus === "確認缺席",
+    (g) => g.rsvp_status === "確認缺席",
   ).length;
   const vegetarian = guests.value.filter(
-    (g) => g.mealPreference === "素食" && g.rsvpStatus === "已出席",
+    (g) => g.meal_preference === "素食" && g.rsvp_status === "已出席",
   ).length;
   const meatEater = guests.value.filter(
-    (g) => g.mealPreference === "葷食" && g.rsvpStatus === "已出席",
+    (g) => g.meal_preference === "葷食" && g.rsvp_status === "已出席",
   ).length;
 
   return {
@@ -24,7 +27,7 @@ const stats = computed(() => {
     vegetarian,
     meatEater,
     total: guests.value.length,
-    pending: guests.value.filter((g) => g.rsvpStatus === "等待確認").length,
+    pending: guests.value.filter((g) => g.rsvp_status === "等待確認").length,
   };
 });
 
@@ -43,31 +46,25 @@ const tableStats = computed(() => {
 
   // 統計已出席的客人
   guests.value.forEach((guest) => {
-    if (guest.table && guest.rsvpStatus === "已出席") {
-      if (tables[guest.table]) {
-        tables[guest.table].count += 1;
-        tables[guest.table].guests.push(guest.name);
+    if (guest.table_number && guest.rsvp_status === "已出席") {
+      if (tables[guest.table_number]) {
+        tables[guest.table_number].count += 1;
+        tables[guest.table_number].guests.push(guest.name);
       }
     }
   });
 
   return Object.values(tables);
 });
-
-// 監聽數據變化
-watch(
-  () => guestsData,
-  (newData) => {
-    guests.value = [...newData];
-  },
-  { deep: true },
-);
 </script>
 
 <template>
   <div class="guest-stats">
     <div class="stats-container">
       <h1 class="stats-title">即時統計</h1>
+
+      <p v-if="loading">載入中...</p>
+      <p v-if="error" class="error-msg">{{ error }}</p>
 
       <!-- 統計卡片網格 -->
       <div class="stats-grid">

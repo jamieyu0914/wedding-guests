@@ -16,7 +16,7 @@ const sideMenuRef = ref(null);
     <SideMenu ref="sideMenuRef" />
     <main class="main-content">
       <!-- 首頁 -->
-      <template v-if="!sideMenuRef || sideMenuRef.activeMenu === 'home'">
+      <template v-if="!sideMenuRef?.activeMenu || sideMenuRef.activeMenu === 'home'">
         <HomePage />
       </template>
 

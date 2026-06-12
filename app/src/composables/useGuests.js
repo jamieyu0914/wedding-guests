@@ -1,21 +1,21 @@
 import { ref } from 'vue'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '../lib/supabase.js'
 
+const guests = ref([])
+const loading = ref(false)
+const error = ref(null)
+ 
 export function useGuests() {
-  const guests = ref([])
-  const loading = ref(false)
-  const error = ref(null)
-
   // 讀取所有賓客
   async function fetchGuests() {
     loading.value = true
-    const { data, error: err } = await supabase
+    const { data: guestsData, error: err } = await supabase
       .from('guests')
       .select('*')
       .order('id')
-
+    console.log("Fetched guests:", guestsData);
     if (err) error.value = err.message
-    else guests.value = data
+    else guests.value = guestsData
     loading.value = false
   }
 
@@ -26,10 +26,10 @@ export function useGuests() {
       .insert([{
         name: guest.name,
         email: guest.email,
-        phone: guest.phone,
+        phone_last_3_code: guest.phoneLast3Code,
         meal_preference: guest.mealPreference,
         rsvp_status: guest.rsvpStatus,
-        table_number: guest.table,
+        table_number: guest.tableNumber,
         notes: guest.notes
       }])
       .select()

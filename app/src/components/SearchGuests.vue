@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useGuests } from '@/composables/useGuests'
+import { useGuests } from '../composables/useGuests'
 
 const { guests, loading, error, fetchGuests, updateGuest, deleteGuest } = useGuests()
 
@@ -23,7 +23,7 @@ const filteredGuests = computed(() => {
     const searchFields = [
       guest.name?.toLowerCase() ?? '',
       guest.email?.toLowerCase() ?? '',
-      guest.phone ?? '',
+      guest.phone_last_3_code ?? '',
       guest.meal_preference?.toLowerCase() ?? '',
       guest.rsvp_status?.toLowerCase() ?? '',
     ];
@@ -100,7 +100,7 @@ const clearSearch = () => {
 
           <div class="info-item">
             <span class="label">手機:</span>
-            <a :href="`tel:${guest.phone}`">{{ guest.phone }}</a>
+            <a :href="`tel:${guest.phone_last_3_code}`">09*******{{ guest.phone_last_3_code }}</a>
           </div>
 
           <div class="info-item">
