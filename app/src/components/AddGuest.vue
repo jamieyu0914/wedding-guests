@@ -160,7 +160,7 @@ const submitGuest = async () => {
 <style scoped>
 .card {
   max-width: 500px;
-  background: white;
+  background: var(--accent);
   border-radius: 12px;
   padding: 24px;
   border: 1px solid rgba(192, 132, 252, 0.3);
@@ -201,6 +201,7 @@ h2 {
 
 .form-group {
   margin-bottom: 16px;
+  color: #9f54e5;
 }
 
 label {
@@ -222,7 +223,7 @@ select {
 }
 
 #name {
-  color: purple;
+  color: var(--text-h);
 }
 
 input:focus,
@@ -237,14 +238,11 @@ select:focus {
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--accent) 0%,
-    rgba(192, 132, 252, 0.8) 100%
-  );
-  color: white;
+  background: rgba(168, 85, 247, 0.2);
+    color: #9f54e5;
   cursor: pointer;
   font-size: 15px;
+  transition: background 0.2s;
 }
 
 .save-btn:disabled {

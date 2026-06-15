@@ -97,7 +97,7 @@ const clearSearch = () => {
       >
         ✕
       </button>
-      <button class="search-btn" aria-label="搜尋">🔍</button>
+      <button class="search-btn" aria-label="搜尋"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
 
     <div class="results-info">
@@ -343,7 +343,7 @@ h1 {
   font-weight: 600;
 }
 .meal-preference.meal-meat-based {
-  color: #d4a574;
+  color: #f59e0b;
 }
 .meal-preference.meal-vegetarian {
   color: #22c55e;
