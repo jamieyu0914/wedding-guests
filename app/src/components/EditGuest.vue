@@ -261,7 +261,7 @@ h1 {
 
 .form-group label {
   font-weight: 600;
-  color: var(--text-h);
+  color: #9f54e5;
   font-size: 0.9rem;
 }
 

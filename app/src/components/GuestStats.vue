@@ -240,11 +240,7 @@ const tableStats = computed(() => {
   font-weight: 700;
   margin: 0 0 32px 0;
   line-height: 1.4;
-  background: linear-gradient(
-    135deg,
-    var(--accent) 0%,
-    rgba(192, 132, 252, 0.8) 100%
-  );
+  background: var(--text-h);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
