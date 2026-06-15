@@ -48,12 +48,12 @@ const handleKeyPress = (event) => {
 <template>
   <div class="home-page">
     <div class="home-container">
+
+      <h1 class="welcome-title">Welcome to our Wedding Day</h1>
+      <p class="welcome-subtitle">2026</p>
+      <div class="welcome-decoration">✨ 💍 ✨</div>
       <!-- 未登入狀態 - 登入表單 -->
       <div v-if="!isLoggedIn" class="login-form-wrapper">
-        <h1 class="welcome-title">Welcome our Wedding</h1>
-        <p class="welcome-subtitle">2026 Wedding</p>
-        <div class="welcome-decoration">✨ 💍 ✨</div>
-
         <div class="login-form">
           <h2 class="login-title">請輸入帳號、密碼以繼續</h2>
 
@@ -96,10 +96,7 @@ const handleKeyPress = (event) => {
 
       <!-- 已登入狀態 - 歡迎頁面 -->
       <div v-if="isLoggedIn" class="welcome-wrapper">
-        <h1 class="welcome-title">Welcome our Wedding</h1>
-        <p class="welcome-subtitle">2026 Wedding</p>
-        <div class="welcome-decoration">✨ 💍 ✨</div>
-        <p class="user-greeting">Let's enjoy the wedding together !</p>
+        <p class="user-greeting">That's what makes you beautiful !</p>
       </div>
     </div>
   </div>
@@ -123,7 +120,7 @@ const handleKeyPress = (event) => {
 }
 
 .welcome-title {
-  font-size: 48px;
+  font-size: 40px;
   font-weight: 700;
   margin: 0 0 16px 0;
   background: linear-gradient(

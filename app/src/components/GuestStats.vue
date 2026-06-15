@@ -82,7 +82,7 @@ const tableStats = computed(() => {
         <div class="stats-stack">
           <!-- 待確認人數卡片 -->
           <div class="stat-card pending">
-            <div class="stat-icon"><i class="fa fa-hourglass-start" aria-hidden="true"></i></div>
+            <div class="stat-icon"><i class="fa-solid fa-chair" aria-hidden="true"></i></div>
             <div class="stat-content">
               <p class="stat-label">待確認人數</p>
               <p class="stat-number">{{ stats.pending }}</p>

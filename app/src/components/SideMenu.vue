@@ -75,12 +75,12 @@ defineExpose({
         @mouseenter="showLogoutMenu = true"
         @mouseleave="showLogoutMenu = false"
       >
-        <p class="status-text">✓ 已登入</p>
+        <p class="status-text"><i class="fa-solid fa-right-to-bracket"></i> 已登入</p>
         <div v-if="showLogoutMenu" class="logout-dropdown">
-          <button @click="handleLogout" class="logout-button">登出</button>
+          <button @click="handleLogout" class="logout-button"><i class="fa-solid fa-right-from-bracket"></i> 登出</button>
         </div>
       </div>
-      <p v-else>⚠️ 未登入</p>
+      <p v-else><i class="fa-solid fa-land-mine-on"></i> 未登入</p>
     </div>
   </aside>
 </template>
