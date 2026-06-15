@@ -10,7 +10,6 @@ const TOTAL_TABLES = 27;
 
 // 計算統計數據
 const stats = computed(() => {
-  console.log("Calculating stats with guests:", guests);
   const attended = guests.value.filter((g) => g.rsvp_status === "已出席").length;
   const notAttended = guests.value.filter(
     (g) => g.rsvp_status === "確認缺席",

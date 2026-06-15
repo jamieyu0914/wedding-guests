@@ -14,7 +14,6 @@ export function useGuests() {
       .from('guests')
       .select('*')
       .order('id')
-    console.log("Fetched guests:", guestsData);
     if (err) error.value = err.message
     else guests.value = guestsData
     loading.value = false

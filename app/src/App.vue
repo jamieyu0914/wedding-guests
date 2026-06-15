@@ -7,9 +7,6 @@ import EditGuest from "./components/EditGuest.vue";
 import GuestStats from "./components/GuestStats.vue";
 import Settings from "./components/Settings.vue";
 
-console.log("1 /src/App.vue mounted");
-console.log(SearchGuests.__file);
-
 const sideMenuRef = ref(null);
 const editingGuestId = ref(null);
 
