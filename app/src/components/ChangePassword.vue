@@ -269,14 +269,12 @@ input:focus {
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--accent) 0%,
-    rgba(192, 132, 252, 0.8) 100%
-  );
-  color: white;
+  background: rgba(168, 85, 247, 0.2);
+  color: #9f54e5;
   cursor: pointer;
   font-size: 15px;
+  transition: background 0.2s;
+
 }
 
 .save-btn:disabled {

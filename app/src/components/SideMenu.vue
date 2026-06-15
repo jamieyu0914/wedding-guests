@@ -13,9 +13,9 @@ const handleLogout = () => {
 };
 
 const menuItems = [
-  { id: "guests", label: "賓客列表", icon: "🔍" },
-  { id: "stats", label: "即時統計", icon: "📊" },
-  { id: "settings", label: "設定", icon: "⚙️" },
+  { id: "guests", label: "賓客列表", icon: "fa fa-search" },
+  { id: "stats", label: "即時統計", icon: "fa fa-chart-bar" },
+  { id: "settings", label: "設定", icon: "fa fa-cog" },
 ];
 
 // 監聽登入狀態，未登入時返回首頁
@@ -62,7 +62,7 @@ defineExpose({
           @click="handleMenuClick(item.id)"
           :title="!isLoggedIn && item.id !== 'home' ? '請先登入' : ''"
         >
-          <span class="menu-icon">{{ item.icon }}</span>
+          <span class="menu-icon"><i :class="item.icon" aria-hidden="true"></i></span>
           <span class="menu-label">{{ item.label }}</span>
         </li>
       </ul>

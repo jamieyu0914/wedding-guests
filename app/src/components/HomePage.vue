@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { login, logout, getAuthState } from "../stores/auth.js";
 
 const { isLoggedIn, currentUser } = getAuthState();
-console.log("HomePage - isLoggedIn:", isLoggedIn.value);
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
@@ -100,7 +99,7 @@ const handleKeyPress = (event) => {
         <h1 class="welcome-title">Welcome our Wedding</h1>
         <p class="welcome-subtitle">2026 Wedding</p>
         <div class="welcome-decoration">✨ 💍 ✨</div>
-        <p class="user-greeting">Let's enjoy the wedding together ! ↩️</p>
+        <p class="user-greeting">Let's enjoy the wedding together !</p>
       </div>
     </div>
   </div>

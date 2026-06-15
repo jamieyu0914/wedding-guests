@@ -7,7 +7,7 @@ const emit = defineEmits(["select"]);
     <h2>設定</h2>
 
     <button class="menu-item" @click="emit('select', 'addGuest')">
-      <span class="menu-icon">➕</span>
+      <span class="menu-icon"><i data-v-aa8ac279="" class="fas fa-edit"></i></span>
       <span class="menu-text">
         <strong>新增賓客</strong>
         <small>手動新增一位賓客資料</small>
@@ -16,7 +16,7 @@ const emit = defineEmits(["select"]);
     </button>
 
     <button class="menu-item" @click="emit('select', 'changePassword')">
-      <span class="menu-icon">🔒</span>
+      <span class="menu-icon"><i class="fas fa-key"></i></span>
       <span class="menu-text">
         <strong>變更密碼</strong>
         <small>更新您的登入密碼</small>

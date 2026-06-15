@@ -71,7 +71,7 @@ const tableStats = computed(() => {
       <div class="stats-grid">
         <!-- 已出席人數卡片 -->
         <div class="stat-card attended">
-          <div class="stat-icon">✓</div>
+          <div class="stat-icon"><i class="fa fa-check" aria-hidden="true"></i></div>
           <div class="stat-content">
             <p class="stat-label">出席人數</p>
             <p class="stat-number">{{ stats.attended }}</p>
@@ -82,7 +82,7 @@ const tableStats = computed(() => {
         <div class="stats-stack">
           <!-- 待確認人數卡片 -->
           <div class="stat-card pending">
-            <div class="stat-icon">⏳</div>
+            <div class="stat-icon"><i class="fa fa-hourglass-start" aria-hidden="true"></i></div>
             <div class="stat-content">
               <p class="stat-label">待確認人數</p>
               <p class="stat-number">{{ stats.pending }}</p>
@@ -92,7 +92,7 @@ const tableStats = computed(() => {
 
           <!-- 未到人數卡片 -->
           <div class="stat-card not-attended">
-            <div class="stat-icon">✗</div>
+            <div class="stat-icon"><i class="fa fa-times" aria-hidden="true"></i></div>
             <div class="stat-content">
               <p class="stat-label">缺席人數</p>
               <p class="stat-number">{{ stats.notAttended }}</p>
@@ -106,7 +106,7 @@ const tableStats = computed(() => {
 
         <!-- 素食人數卡片 -->
         <div class="stat-card vegetarian">
-          <div class="stat-icon">🥗</div>
+          <div class="stat-icon"><i class="fas fa-leaf" aria-hidden="true"></i></div>
           <div class="stat-content">
             <p class="stat-label">素食人數</p>
             <p class="stat-number">{{ stats.vegetarian }}</p>
@@ -116,7 +116,7 @@ const tableStats = computed(() => {
 
         <!-- 葷食人數卡片 -->
         <div class="stat-card meat-eater">
-          <div class="stat-icon">🍖</div>
+          <div class="stat-icon"><i class="fa-solid fa-bacon"></i></div>
           <div class="stat-content">
             <p class="stat-label">葷食人數</p>
             <p class="stat-number">{{ stats.meatEater }}</p>
@@ -292,7 +292,7 @@ const tableStats = computed(() => {
 }
 
 .stat-card.vegetarian .stat-icon {
-  color: #8b5cf6;
+  color: #22c55e;
 }
 
 .stat-card.meat-eater .stat-icon {
@@ -300,7 +300,7 @@ const tableStats = computed(() => {
 }
 
 .stat-card.pending .stat-icon {
-  color: #f59e0b;
+  color: #ca9d6e;
 }
 
 .stat-content {
@@ -533,7 +533,7 @@ const tableStats = computed(() => {
 }
 
 .meal-segment.meat-eater {
-  background: linear-gradient(90deg, #d4a574 0%, #b8935a 100%);
+  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
 }
 
 .meal-percentage {
@@ -565,7 +565,7 @@ const tableStats = computed(() => {
 }
 
 .meal-color.meat-eater {
-  background: #d4a574;
+  background: #f59e0b;
 }
 
 .meal-label {
