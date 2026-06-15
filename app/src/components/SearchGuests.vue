@@ -109,13 +109,13 @@ const clearSearch = () => {
         <div class="guest-header">
           <h3>{{ guest.name }}</h3>
 
-          <button️
+          <button
             class="toggle-password-btn"
             @click="editGuest(guest.id)"
             aria-label="編輯賓客"
           >
             <i class="fas fa-edit"></i>
-          </button️>
+          </button>
 
           <span :class="['status-badge', getStatusClass(guest.rsvp_status)]">
             {{ guest.rsvp_status }}

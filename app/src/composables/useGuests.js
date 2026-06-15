@@ -19,6 +19,17 @@ export function useGuests() {
     loading.value = false;
   }
 
+  // 根據 ID 讀取單一賓客
+  async function fetchGuestById(id) {
+    const { data, error: err } = await supabase
+      .from("guests")
+      .select("*")
+      .eq("id", id)
+      .single();
+    if (err) error.value = err.message;
+    return data;
+  }
+
   // 新增賓客
   async function addGuest(guest) {
     const { data, error: err } = await supabase
@@ -57,6 +68,16 @@ export function useGuests() {
     }
   }
 
+  // 刪除賓客
+  async function deleteGuest(id) {
+    const { error: err } = await supabase
+    .from("guests")
+    .delete()
+    .eq("id", id);
+    if (err) error.value = err.message;
+    else guests.value = guests.value.filter((g) => g.id !== id);
+  }
+
   return {
     guests,
     loading,
@@ -64,5 +85,7 @@ export function useGuests() {
     fetchGuests,
     addGuest,
     updateGuest,
+    fetchGuestById,
+    deleteGuest,
   };
 }
