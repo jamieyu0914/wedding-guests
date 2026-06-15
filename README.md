@@ -57,6 +57,7 @@ npm run build
 app/
 ├── src/
 │   ├── components/    # Vue components
+│   ├── composables/   # Vue composables
 │   ├── App.vue        # Root component
 │   ├── main.js        # Application entry point
 │   └── style.css      # Global styles
