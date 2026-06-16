@@ -61,8 +61,10 @@ export function useGuests() {
 
     if (err) {
         error.value = err.message;
+        return { success: false, error: err.message };
     } else {
         guests.value.push(data);
+        return { success: true, data };
     }
   }
 
@@ -77,11 +79,13 @@ export function useGuests() {
 
     if (err) {
       error.value = err.message;
+      return { success: false, error: err.message };
     } else {
       const idx = guests.value.findIndex((g) => g.id === id);
       if (idx !== -1) {
         guests.value[idx] = data;
       }
+      return { success: true, data };
     }
   }
 

@@ -63,15 +63,17 @@ const submitGuest = async () => {
 
     if (result.success) {
       guestSuccess.value = true;
-      guestMessage.value = "新增賓客成功";
-      resetGuestForm();
+      guestMessage.value = "✓ 儲存成功！";
+      setTimeout(() => {
+        resetGuestForm();
+      }, 3000);
     } else {
       guestSuccess.value = false;
-      guestMessage.value = result.message || "新增失敗，請稍後再試";
+      guestMessage.value = result.message || "✗ 儲存失敗，請稍後再試！";
     }
   } catch (err) {
     guestSuccess.value = false;
-    guestMessage.value = "系統錯誤，請稍後再試";
+    guestMessage.value = "系統錯誤，請稍後再試！";
   } finally {
     guestLoading.value = false;
   }
