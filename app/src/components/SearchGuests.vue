@@ -123,7 +123,7 @@ const clearSearch = () => {
         </div>
 
         <div class="guest-info">
-          <div class="info-item">
+          <div v-if="guest.email" class="info-item">
             <span class="label">信箱:</span>
             <a :href="`mailto:${guest.email}`">{{ guest.email }}</a>
           </div>

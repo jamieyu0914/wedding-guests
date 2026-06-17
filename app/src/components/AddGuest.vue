@@ -13,6 +13,7 @@ const guestForm = ref({
   mealPreference: "葷食",
   rsvpStatus: "等待確認",
   tableNumber: "",
+  tableName: "",
   notes: "",
 });
 
@@ -28,6 +29,7 @@ function resetGuestForm() {
     mealPreference: "葷食",
     rsvpStatus: "等待確認",
     tableNumber: "",
+    tableName: "",
     notes: "",
   };
   guestMessage.value = "";
@@ -55,20 +57,23 @@ const submitGuest = async () => {
       tableNumber: guestForm.value.tableNumber
         ? Number(guestForm.value.tableNumber)
         : null,
+      tableName: guestForm.value.tableName.trim(),
       notes: guestForm.value.notes.trim(),
     });
 
     if (result.success) {
       guestSuccess.value = true;
-      guestMessage.value = "新增賓客成功";
-      resetGuestForm();
+      guestMessage.value = "✓ 儲存成功！";
+      setTimeout(() => {
+        resetGuestForm();
+      }, 3000);
     } else {
       guestSuccess.value = false;
-      guestMessage.value = result.message || "新增失敗，請稍後再試";
+      guestMessage.value = result.message || "✗ 儲存失敗，請稍後再試！";
     }
   } catch (err) {
     guestSuccess.value = false;
-    guestMessage.value = "系統錯誤，請稍後再試";
+    guestMessage.value = "系統錯誤，請稍後再試！";
   } finally {
     guestLoading.value = false;
   }
@@ -130,12 +135,21 @@ const submitGuest = async () => {
     </div>
 
     <div class="form-group">
-      <label>桌號</label>
+      <label>桌次</label>
       <input
         v-model="guestForm.tableNumber"
         type="number"
         min="1"
         placeholder="請輸入桌號"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>桌名</label>
+      <input
+        v-model="guestForm.tableName"
+        type="text"
+        placeholder="請輸入桌名"
       />
     </div>
 

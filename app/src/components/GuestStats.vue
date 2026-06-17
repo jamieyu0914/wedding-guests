@@ -6,7 +6,7 @@ const { guests, loading, error, fetchGuests } = useGuests()
 
 onMounted(() => fetchGuests())
 
-const TOTAL_TABLES = 27;
+const TOTAL_TABLES = 26;
 
 // 計算統計數據
 const stats = computed(() => {
@@ -34,19 +34,19 @@ const stats = computed(() => {
 // 計算每桌的人數
 const tableStats = computed(() => {
   const tables = {};
-
+ 
   // 初始化桌次
-  for (let i = 1; i <= TOTAL_TABLES; i++) {
+  for (let i = 0; i <= TOTAL_TABLES; i++) {
     tables[i] = {
       table: i,
       count: 0,
       guests: [],
     };
   }
-
+ 
   // 統計已出席的客人
   guests.value.forEach((guest) => {
-    if (guest.table_number && guest.rsvp_status === "已出席") {
+    if (guest.table_number != null && guest.rsvp_status === "已出席") {
       if (tables[guest.table_number]) {
         tables[guest.table_number].count += 1;
         tables[guest.table_number].guests.push(guest.name);
@@ -203,12 +203,13 @@ const tableStats = computed(() => {
             v-for="table in tableStats"
             :key="table.table"
             class="table-card"
-            :class="{ 'has-guests': table.count > 0 }"
+            :class="{ 'has-guests': table.count >= 0 }"
           >
-            <div class="table-number">第{{ table.table }}桌</div>
+            <div v-if="table.table == 0" class="table-number">主桌</div>
+            <div v-else class="table-number">第{{ table.table }}桌</div>
             <div class="table-count">{{ table.count }}</div>
             <div class="table-label">人</div>
-            <div v-if="table.count > 0" class="table-guests-tooltip">
+            <div v-if="table.count >= 0" class="table-guests-tooltip">
               {{ table.guests.join(", ") }}
             </div>
           </div>

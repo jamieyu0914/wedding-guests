@@ -13,8 +13,11 @@ export function useGuests() {
       .from("guests")
       .select("*")
       .order("id");
-    if (err) error.value = err.message;
-    else guests.value = guestsData;
+    if (err) {
+      error.value = err.message;
+    } else {
+      guests.value = guestsData;
+    }
     loading.value = false;
   }
 
@@ -49,14 +52,20 @@ export function useGuests() {
           meal_preference: guest.mealPreference,
           rsvp_status: guest.rsvpStatus,
           table_number: guest.tableNumber,
+          table_name: guest.tableName,
           notes: guest.notes,
         },
       ])
       .select()
       .single();
 
-    if (err) error.value = err.message;
-    else guests.value.push(data);
+    if (err) {
+        error.value = err.message;
+        return { success: false, error: err.message };
+    } else {
+        guests.value.push(data);
+        return { success: true, data };
+    }
   }
 
   // 更新賓客
@@ -68,10 +77,15 @@ export function useGuests() {
       .select()
       .single();
 
-    if (err) error.value = err.message;
-    else {
+    if (err) {
+      error.value = err.message;
+      return { success: false, error: err.message };
+    } else {
       const idx = guests.value.findIndex((g) => g.id === id);
-      if (idx !== -1) guests.value[idx] = data;
+      if (idx !== -1) {
+        guests.value[idx] = data;
+      }
+      return { success: true, data };
     }
   }
 

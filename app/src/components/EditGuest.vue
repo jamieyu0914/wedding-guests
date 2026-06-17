@@ -49,11 +49,15 @@ async function handleSave() {
   saveSuccess.value = false;
   saveError.value = "";
   try {
-    await updateGuest(props.guestId, form.value);
-    saveSuccess.value = true;
-    setTimeout(() => (saveSuccess.value = false), 3000);
+    const response = await updateGuest(props.guestId, form.value);
+    if (response.success) {
+      saveSuccess.value = true;
+      setTimeout(() => (saveSuccess.value = false), 3000);
+    } else {
+      saveError.value = response.error || "✗ 儲存失敗，請再試一次！";
+    }
   } catch (e) {
-    saveError.value = "儲存失敗，請再試一次。";
+    saveError.value = "✗ 儲存失敗，請再試一次！";
   }
 }
 
